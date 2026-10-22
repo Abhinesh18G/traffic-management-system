@@ -1,0 +1,78 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Intelligent Traffic Management System</title>
+<style>
+body{font-family:Arial,sans-serif;margin:0;background:#f1f5f9;color:#172033}
+header{background:#12345a;color:white;padding:22px}
+header h1{margin:0 0 8px}
+main{max-width:1200px;margin:auto;padding:20px}
+.cards{display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:14px}
+.card,.panel{background:white;padding:18px;border-radius:10px;box-shadow:0 2px 8px #0001}
+.alert{background:#fee2e2;color:#991b1b;padding:12px;border-radius:8px;margin:12px 0}
+.notice{background:#fef3c7;color:#92400e;padding:12px;border-radius:8px;margin:12px 0}
+table{width:100%;border-collapse:collapse;background:white;margin-top:12px}
+th,td{padding:12px;text-align:left;border-bottom:1px solid #e2e8f0}
+th{background:#dbeafe}
+.status{font-weight:bold}
+.low{color:#15803d}.moderate{color:#a16207}.high{color:#c2410c}.critical{color:#b91c1c}
+.panel{margin-top:18px}
+@media(max-width:650px){table{font-size:12px}th,td{padding:7px}}
+</style>
+</head>
+<body>
+<header>
+<h1>Intelligent Traffic Signal and Urban Congestion Management</h1>
+<p>Metropolitan Traffic Control Authority | Simulated traffic monitoring</p>
+</header>
+<main>
+<h2>Intersection Traffic Dashboard</h2>
+<div class="cards" id="summary"></div>
+<div id="alerts"></div>
+<div class="panel">
+<h3>Intersection Details</h3>
+<div style="overflow-x:auto">
+<table>
+<thead><tr>
+<th>Intersection ID</th><th>Location</th><th>Vehicles</th>
+<th>Average Wait (sec)</th><th>Signal Status</th><th>Congestion</th>
+</tr></thead>
+<tbody id="trafficRows"></tbody>
+</table>
+</div>
+</div>
+<div class="panel">
+<h3>Road Closure Advisory</h3>
+<p><strong>Road:</strong> Central Avenue near Junction T03</p>
+<p><strong>Status:</strong> Temporarily closed for simulated maintenance.</p>
+<p><strong>Diversion:</strong> Use Riverside Road and approach T03 from the east.</p>
+</div>
+<div class="panel">
+<h3>Emergency Vehicle Advisory</h3>
+<p>An ambulance is approaching T02. Give emergency vehicles priority and keep the junction clear.</p>
+</div>
+</main>
+<script>
+const intersections=[
+{id:"T01",location:"Central Avenue",vehicles:42,wait:45,signal:"Green",level:"Low"},
+{id:"T02",location:"City Hospital Road",vehicles:115,wait:138,signal:"Priority Green",level:"Critical"},
+{id:"T03",location:"Market Street",vehicles:94,wait:126,signal:"Red",level:"High"},
+{id:"T04",location:"Riverside Junction",vehicles:61,wait:78,signal:"Green",level:"Moderate"},
+{id:"T05",location:"Railway Station Road",vehicles:83,wait:105,signal:"Red",level:"High"}
+];
+const summary=document.getElementById("summary");
+const rows=document.getElementById("trafficRows");
+const alerts=document.getElementById("alerts");
+summary.innerHTML=
+`<div class="card"><strong>Intersections</strong><h2>${intersections.length}</h2></div>`+
+`<div class="card"><strong>Vehicles Monitored</strong><h2>${intersections.reduce((s,x)=>s+x.vehicles,0)}</h2></div>`;
+intersections.forEach(x=>{
+rows.innerHTML+=`<tr><td>${x.id}</td><td>${x.location}</td><td>${x.vehicles}</td><td>${x.wait}</td><td>${x.signal}</td><td class="status ${x.level.toLowerCase()}">${x.level}</td></tr>`;
+if(x.wait>120){alerts.innerHTML+=`<div class="alert">Waiting-time alert: ${x.id} (${x.location}) has an average wait of ${x.wait} seconds.</div>`;}
+});
+</script>
+</body>
+</html>
