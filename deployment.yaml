@@ -7,6 +7,7 @@ metadata:
     app: traffic-management
 spec:
   replicas: 2
+  revisionHistoryLimit: 5
   selector:
     matchLabels:
       app: traffic-management
@@ -22,15 +23,15 @@ spec:
             - containerPort: 80
           readinessProbe:
             httpGet:
-              path: /
+              path: /health.html
               port: 80
             initialDelaySeconds: 3
             periodSeconds: 5
             timeoutSeconds: 2
-            failureThreshold: 3
+            failureThreshold: 2
           livenessProbe:
             httpGet:
-              path: /
+              path: /health.html
               port: 80
             initialDelaySeconds: 10
             periodSeconds: 10
