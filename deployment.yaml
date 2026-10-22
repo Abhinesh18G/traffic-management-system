@@ -1,0 +1,58 @@
+
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: traffic-management
+  labels:
+    app: traffic-management
+spec:
+  replicas: 2
+  revisionHistoryLimit: 5
+  selector:
+    matchLabels:
+      app: traffic-management
+  template:
+    metadata:
+      labels:
+        app: traffic-management
+    spec:
+      containers:
+        - name: traffic-dashboard
+          image: abhinesh18g/traffic-management-system:v1
+          imagePullPolicy: Always
+          ports:
+            - containerPort: 80
+          readinessProbe:
+            httpGet:
+              path: /
+              port: 80
+            initialDelaySeconds: 5
+            periodSeconds: 5
+            failureThreshold: 3
+          livenessProbe:
+            httpGet:
+              path: /
+              port: 80
+            initialDelaySeconds: 10
+            periodSeconds: 10
+            failureThreshold: 3
+          resources:
+            requests:
+              cpu: 50m
+              memory: 32Mi
+            limits:
+              cpu: 250m
+              memory: 128Mi
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: traffic-management-service
+spec:
+  type: NodePort
+  selector:
+    app: traffic-management
+  ports:
+    - port: 80
+      targetPort: 80
+      nodePort: 30085
